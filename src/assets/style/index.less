@@ -1,13 +1,15 @@
+@import url('../icon/index.css');
 @import url('./color.less');
 @import url('./class.less');
 @import url('./font.less');
+@import url('./fontSize.less');
 
 * {
   margin: 0px;
   padding: 0px;
 }
 
-html, body, #app {
+html, body{
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -15,6 +17,6 @@ html, body, #app {
 
 html {
   font-family: 'comfortaa-light', 'huawen';
-  font-size: 50px;
+  font-size: @htmlFS;
   font-weight: normal;
 }
