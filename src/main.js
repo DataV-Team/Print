@@ -5,6 +5,10 @@ import store from './store/index'
 
 import './assets/style/index.less'
 
+import plugins from './plugins/index'
+
+Vue.use(plugins)
+
 Vue.config.productionTip = false
 
 new Vue({
