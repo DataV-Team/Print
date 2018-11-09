@@ -5,11 +5,11 @@
 
     <div class="control">
       <i class="jm-prev" />
-      <i :class="playStatus ? 'jm-pause' : 'jm-play'" @click="playStatus = !playStatus" />
+      <i :class="playStatus ? 'jm-pause' : 'jm-play'" @click="currentSong && playOrPause()" />
       <i class="jm-next" />
     </div>
 
-    <div class="current-song" @click="playStatus = !playStatus" :title="currentSong && currentSong.artist">
+    <div class="current-song" @click="currentSong && playOrPause()" :title="currentSong && currentSong.artist">
       {{ currentSong ? currentSong.name : 'No Song' }}
     </div>
 
@@ -26,7 +26,7 @@
             v-for="song in songList"
             :key="`${song.name}-${song.artist}`"
             :title="song.artist"
-            @click="currentSong = song">
+            @click="(currentSong = song) && (playStatus = true)">
             {{ song.name }}
           </div>
 
@@ -118,7 +118,7 @@ export default {
     init () {
       const { $refs, volume } = this
 
-      const { initVolumeSetExtend } = this
+      const { initVolumeSetExtend, getLocalSongConfig } = this
 
       this.songAudio = $refs['song-audio']
 
@@ -130,6 +130,8 @@ export default {
       this.songAudio.volume = volume
 
       initVolumeSetExtend()
+
+      getLocalSongConfig()
     },
     /**
      * @description             init volume set extend
@@ -143,6 +145,18 @@ export default {
 
         document.addEventListener('mouseup', endSetVolume)
       })
+    },
+    /**
+     * @description             play or pause song
+     * @return     {undefined}  no retrun
+     */
+    playOrPause () {
+      const { playStatus, songAudio } = this
+
+      playStatus && songAudio.pause()
+      !playStatus && songAudio.play()
+
+      this.playStatus = !playStatus
     },
     /**
      * @description             set volume
@@ -168,6 +182,13 @@ export default {
 
       document.removeEventListener('mousemove', setVolume)
       document.removeEventListener('mouseup', endSetVolume)
+    },
+    /**
+     * @description             get local song config, volume play status
+     * @return     {undefined}  no return
+     */
+    getLocalSongConfig () {
+
     }
   },
   mounted () {
