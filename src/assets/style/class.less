@@ -1,0 +1,16 @@
+// small text shadow
+.STS (@color: #000) {
+  text-shadow: 0 0 1px #fff,
+  0 0 2px #fff,
+  0 0 3px #fff,
+  0 0 4px @color,
+  0 0 5px @color;
+
+  &:hover {
+    color: #fff;
+  }
+}
+// small box shadow
+.SBS (@color: #000) {
+  box-shadow: 0 0 10px @color;
+}
