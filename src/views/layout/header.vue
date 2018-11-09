@@ -1,7 +1,16 @@
 <template>
   <div id="header">
-    <song-ctl />
-    <menu-bar />
+    <div class="left">
+      <song-ctl />
+    </div>
+
+    <div class="middle">
+      <menu-bar />
+    </div>
+
+    <div class="right">
+      this is right
+    </div>
   </div>
 </template>
 
@@ -26,9 +35,15 @@ export default {
 
 #header {
   height: 70px;
-  box-shadow: 0 0 3px red;
+  box-sizing: border-box;
+  // box-shadow: 0 0 3px red;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
+  .left {
+    box-sizing: border-box;
+    padding-left: 10px;
+  }
 }
 </style>
