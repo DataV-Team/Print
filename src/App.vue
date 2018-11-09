@@ -5,6 +5,8 @@
 </template>
 
 <style lang="less">
+@import url('./assets/style/index.less');
+
 #app {
   width: 100%;
   height: 100%;
