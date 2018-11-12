@@ -9,7 +9,7 @@
       <i class="jm-next" @click="playType[playTypeIndex]['typeName'] === 'random' ? randomSong(true) : nextOrPrev()" />
     </div>
 
-    <div class="current-song" @click="songList[currentSongIndex] && playOrPause()" :title="songList[currentSongIndex] && songList[currentSongIndex].artist">
+    <div :class="`current-song ${!songList.length && 'disabled'}`" @click="songList[currentSongIndex] && playOrPause()" :title="songList[currentSongIndex] && songList[currentSongIndex].artist">
       {{ songList[currentSongIndex] ? songList[currentSongIndex].name : 'No Song' }}
     </div>
 
@@ -38,7 +38,7 @@
         </template>
 
         <template v-else>
-          <div class="song-item">No Song List</div>
+          <div class="song-item disabled">No Song List</div>
         </template>
       </div>
     </div>
@@ -59,7 +59,7 @@ export default {
       // song list
       songList: [
         {
-          name: 'Good Life',
+          name: 'good life',
           artist: 'WeiZKliF',
           src: 'http://test.jiaminghi.com/songs/good life.mp3'
         },
@@ -310,18 +310,39 @@ export default {
 #song-ctl {
   color: @TC;
   height: 70px;
+  font-size: @SCTLFS;
 
   &:hover {
-    .current-song {
-      .SBS(fade(@BSC, 80));
+    .current-song, .action-container .song-list {
+      .hover;
     }
 
     .action-container {
       visibility: visible;
+    }
+  }
 
-      .song-list {
-        .SBS(fade(@BSC, 80));
-      }
+  .hover {
+    .SBS(fade(@BSC, 80));
+  }
+
+  .active (@color: @TC) {
+    &:active {
+      color: @color;
+    }
+  }
+
+  .disabled {
+    color: fade(@TC, 30);
+    text-shadow: 0 0 0px !important;
+    cursor: default !important;
+
+    &:hover {
+      color: fade(@TC, 30) !important;
+    }
+
+    &:active {
+      color: fade(@TC, 30) !important;
     }
   }
 
@@ -339,13 +360,10 @@ export default {
     line-height: 30px;
 
     i {
-      font-size: @SCTLFS;
+      font-size: @SCTLIFS;
       cursor: pointer;
       .STS(@TC);
-
-      &:active {
-        color: @TC;
-      }
+      .active;
     }
   }
 
@@ -358,10 +376,7 @@ export default {
     cursor: pointer;
     .STS(@TC);
     .SBS(fade(@BSC, 60));
-
-    &:active {
-      color: @TC;
-    }
+    .active;
   }
 
   .action-container {
@@ -405,12 +420,10 @@ export default {
         cursor: pointer;
 
         &:hover {
-          .SBS(fade(@BSC, 80));
+          .hover;
         }
 
-        &:active {
-          color: #fff;
-        }
+        .active(#fff);
       }
     }
   }
