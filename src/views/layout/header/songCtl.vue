@@ -1,16 +1,16 @@
 <template>
   <div id="song-ctl">
-    <audio class="song-audio" ref="song-audio" :src="currentSong && currentSong.src"
-      :loop="playType[playTypeIndex] === 'singleLoop'" autoplay />
+    <audio class="song-audio" ref="song-audio" :src="songList[currentSongIndex] && songList[currentSongIndex].src"
+      :loop="playType[playTypeIndex]['typeName'] === 'singleLoop'" :autoplay="playStatus" @ended="autoNextSong" />
 
     <div class="control">
-      <i class="jm-prev" />
-      <i :class="playStatus ? 'jm-pause' : 'jm-play'" @click="currentSong && playOrPause()" />
-      <i class="jm-next" />
+      <i class="jm-prev" @click="playType[playTypeIndex]['typeName'] === 'random' ? randomSong(true) : nextOrPrev(true)" />
+      <i :class="playStatus ? 'jm-pause' : 'jm-play'" @click="songList[currentSongIndex] && playOrPause()" />
+      <i class="jm-next" @click="playType[playTypeIndex]['typeName'] === 'random' ? randomSong(true) : nextOrPrev()" />
     </div>
 
-    <div class="current-song" @click="currentSong && playOrPause()" :title="currentSong && currentSong.artist">
-      {{ currentSong ? currentSong.name : 'No Song' }}
+    <div class="current-song" @click="songList[currentSongIndex] && playOrPause()" :title="songList[currentSongIndex] && songList[currentSongIndex].artist">
+      {{ songList[currentSongIndex] ? songList[currentSongIndex].name : 'No Song' }}
     </div>
 
     <div class="action-container">
@@ -23,15 +23,16 @@
       <div class="song-list">
         <template v-if="songList.length">
           <div class="song-item"
-            v-for="song in songList"
+            v-for="(song, index) in songList"
             :key="`${song.name}-${song.artist}`"
             :title="song.artist"
-            @click="(currentSong = song) && (playStatus = true)">
+            @click="(playStatus = true) && (currentSongIndex = index)">
             {{ song.name }}
           </div>
 
           <div class="song-item"
-            @click="(playTypeIndex + 1) === playType.length ? (playTypeIndex = 0) : (playTypeIndex++)">
+            @click="changePlayType"
+            :title="playType[playTypeIndex]['title']">
             <i :class="playType[playTypeIndex]['class']" />
           </div>
         </template>
@@ -54,7 +55,7 @@ export default {
       // volume btn dom
       volumeBtn: '',
       // play status
-      playStatus: false,
+      playStatus: true,
       // song list
       songList: [
         {
@@ -71,10 +72,15 @@ export default {
           name: 'I wanted you',
           artist: 'starts',
           src: 'http://test.jiaminghi.com/songs/I wanted you.mp3'
+        },
+        {
+          name: 'test',
+          artist: 'unkonw',
+          src: 'http://xmdx.sc.chinaz.com/Files/DownLoad/sound1/201811/10805.mp3'
         }
       ],
       // current song
-      currentSong: '',
+      currentSongIndex: '',
       // play type    loop | singleLoop | random
       playType: [
         {
@@ -83,7 +89,7 @@ export default {
           title: 'All Loop'
         },
         {
-          typeName: 'SingleLoop',
+          typeName: 'singleLoop',
           class: 'jm-singleLoop',
           title: 'Single Loop'
         },
@@ -101,24 +107,35 @@ export default {
       volumeProgressWidth: ''
     }
   },
-  methods: {
-    /**
-     * @description             start play music
-     * @return     {undefined}  no return
-     */
-    start () {
-      const { init } = this
+  watch: {
+    playStatus () {
+      const { setLocalSongConfig } = this
 
-      init()
-    },
+      setLocalSongConfig()
+    }
+  },
+  methods: {
     /**
      * @description             init
      * @return     {undefined}  no return
      */
     init () {
-      const { $refs, volume } = this
+      const { getLocalSongConfig, initDom, initVolumeSetExtend, initCurrentSong } = this
 
-      const { initVolumeSetExtend, getLocalSongConfig } = this
+      getLocalSongConfig()
+
+      initDom()
+
+      initVolumeSetExtend()
+
+      initCurrentSong()
+    },
+    /**
+     * @description             init dom
+     * @return     {undefined}  no return
+     */
+    initDom () {
+      const { $refs, volume } = this
 
       this.songAudio = $refs['song-audio']
 
@@ -126,12 +143,7 @@ export default {
 
       this.volumeProgressWidth = $refs['volume-progress'].clientWidth
 
-      // init volume
       this.songAudio.volume = volume
-
-      initVolumeSetExtend()
-
-      getLocalSongConfig()
     },
     /**
      * @description             init volume set extend
@@ -178,23 +190,116 @@ export default {
      * @return     {undefined}  no return
      */
     endSetVolume () {
-      const { setVolume, endSetVolume } = this
+      const { setVolume, endSetVolume, setLocalSongConfig } = this
 
       document.removeEventListener('mousemove', setVolume)
       document.removeEventListener('mouseup', endSetVolume)
+
+      setLocalSongConfig()
+    },
+    /**
+     * @description             init current song
+     * @return     {undefined}  no return
+     */
+    initCurrentSong () {
+      const { playTypeIndex, playType, songList, randomSong } = this
+
+      if (!songList.length) {
+        this.playStatus = false
+
+        return
+      }
+
+      playType[playTypeIndex]['typeName'] === 'random' ? randomSong() : (this.currentSongIndex = 0)
+    },
+    /**
+     * @description             random song
+     * @return     {undefined}  no return
+     */
+    randomSong (forcePlay = false) {
+      const { currentSongIndex, songList, randomSong } = this
+
+      this.currentSongIndex = parseInt(Math.random() * songList.length)
+
+      currentSongIndex === this.currentSongIndex && randomSong()
+
+      forcePlay && (this.playStatus = true)
+    },
+    /**
+     * @description             change song play type
+     * @return     {undefined}  no return
+     */
+    changePlayType () {
+      const { playTypeIndex, playType, setLocalSongConfig } = this
+
+      ;(playTypeIndex + 1) === playType.length ? this.playTypeIndex = 0 : this.playTypeIndex++
+
+      setLocalSongConfig()
+    },
+    /**
+     * @description             set next song
+     * @return     {undefined}  no return
+     */
+    autoNextSong () {
+      const { songList, playType, playTypeIndex, randomSong, nextOrPrev } = this
+
+      this.playStatus = false
+
+      if (!songList.length) return
+
+      const currentPlayType = playType[playTypeIndex]['typeName']
+
+      currentPlayType === 'random' && randomSong()
+
+      currentPlayType === 'loop' && nextOrPrev()
+
+      this.playStatus = true
+    },
+    /**
+     * @description             next or prev song
+     * @return     {undefined}  no return
+     */
+    nextOrPrev (prev = false) {
+      const { currentSongIndex, songList } = this
+
+      this.playStatus = false
+
+      if (!songList.length) return
+
+      prev && ((currentSongIndex - 1) < 0 ? this.currentSongIndex = songList.length - 1 : this.currentSongIndex--)
+      !prev && ((currentSongIndex + 1) === songList.length ? this.currentSongIndex = 0 : this.currentSongIndex++)
+
+      this.playStatus = true
     },
     /**
      * @description             get local song config, volume play status
      * @return     {undefined}  no return
      */
     getLocalSongConfig () {
+      const volume = localStorage.getItem('volume')
+      const playTypeIndex = localStorage.getItem('playTypeIndex')
+      const playStatus = localStorage.getItem('playStatus')
 
+      volume && (this.volume = parseFloat(volume))
+      playTypeIndex && (this.playTypeIndex = parseInt(playTypeIndex))
+      playStatus === 'false' && (this.playStatus = false)
+    },
+    /**
+     * @description             set local song config, volume play status
+     * @return     {undefined}  no return
+     */
+    setLocalSongConfig () {
+      const { volume, playTypeIndex, playStatus } = this
+
+      localStorage.setItem('volume', volume)
+      localStorage.setItem('playTypeIndex', playTypeIndex)
+      localStorage.setItem('playStatus', playStatus)
     }
   },
   mounted () {
-    const { start } = this
+    const { init } = this
 
-    start()
+    init()
   }
 }
 </script>
@@ -204,6 +309,7 @@ export default {
 
 #song-ctl {
   color: @TC;
+  height: 70px;
 
   &:hover {
     .current-song {
@@ -211,7 +317,7 @@ export default {
     }
 
     .action-container {
-      display: block;
+      visibility: visible;
 
       .song-list {
         .SBS(fade(@BSC, 80));
@@ -260,7 +366,7 @@ export default {
 
   .action-container {
     position: relative;
-    // display: none;
+    visibility: hidden;
     .volume {
       height: 30px;
       display: flex;
