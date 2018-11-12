@@ -5,7 +5,7 @@
     </div>
 
     <div class="middle">
-      <menu-bar />
+      <menu-bar :navBar="navbar" />
     </div>
 
     <div class="right">
@@ -20,12 +20,123 @@ import menuBar from '@/components/menuBar.vue'
 
 export default {
   name: 'Header',
-  data () {
-    return {}
-  },
   components: {
     songCtl,
     menuBar
+  },
+  data () {
+    return {
+      navbar: [
+        {
+          title: 'Gallery',
+          icon: 'jm-play',
+          target: '',
+          children: [
+            {
+              title: 'test1',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test2',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test3',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test4',
+              icon: 'jm-next',
+              target: ''
+            }
+          ]
+        },
+        {
+          title: 'Gallery',
+          icon: 'jm-play',
+          target: '',
+          children: [
+            {
+              title: 'test1',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test2',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test3',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test4',
+              icon: 'jm-next',
+              target: ''
+            }
+          ]
+        },
+        {
+          title: 'Gallery',
+          icon: 'jm-play',
+          target: '',
+          children: [
+            {
+              title: 'test1',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test2',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test3',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test4',
+              icon: 'jm-next',
+              target: ''
+            }
+          ]
+        },
+        {
+          title: 'Gallery',
+          icon: 'jm-play',
+          target: '',
+          children: [
+            {
+              title: 'test1',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test2',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test3',
+              icon: 'jm-next',
+              target: ''
+            },
+            {
+              title: 'test4',
+              icon: 'jm-next',
+              target: ''
+            }
+          ]
+        }
+      ]
+    }
   }
 }
 </script>
