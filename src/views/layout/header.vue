@@ -36,7 +36,6 @@ export default {
 #header {
   height: 70px;
   box-sizing: border-box;
-  // box-shadow: 0 0 3px red;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -44,6 +43,11 @@ export default {
   .left {
     box-sizing: border-box;
     padding-left: 10px;
+  }
+
+  .middle {
+    box-sizing: border-box;
+    padding-top: 10px;
   }
 }
 </style>
