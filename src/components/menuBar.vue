@@ -6,7 +6,7 @@
           <i :class="`${menu.icon} title-icon`" v-if="menu.icon" />{{ menu.title }}
         </div>
 
-        <div class="menu-children" v-if="menu.children.length">
+        <div class="menu-children" v-if="menu.children && menu.children.length">
           <div class="children-item" v-for="child in menu.children" :key="child.title">
             <i :class="`${child.icon} title-icon`" v-if="child.icon" />{{ child.title }}
           </div>
@@ -52,6 +52,7 @@ export default {
     &:hover {
       .title-icon {
         left: 10px;
+        color: @TC;
       }
     }
   }
