@@ -29,109 +29,63 @@ export default {
       navbar: [
         {
           title: 'Gallery',
-          icon: 'jm-play',
+          icon: 'jm-gallery',
           target: '',
           children: [
             {
-              title: 'test1',
-              icon: 'jm-next',
-              target: ''
-            },
-            {
-              title: 'test2',
-              icon: 'jm-next',
-              target: ''
-            },
-            {
-              title: 'test3',
-              icon: 'jm-next',
-              target: ''
-            },
-            {
-              title: 'test4',
-              icon: 'jm-next',
-              target: ''
+              title: 'edit',
+              icon: 'jm-manage'
             }
           ]
         },
         {
-          title: 'Gallery',
-          icon: 'jm-play',
+          title: 'Video',
+          icon: 'jm-video',
           target: '',
           children: [
             {
-              title: 'test1',
-              icon: 'jm-next',
-              target: ''
-            },
-            {
-              title: 'test2',
-              icon: 'jm-next',
-              target: ''
-            },
-            {
-              title: 'test3',
-              icon: 'jm-next',
-              target: ''
-            },
-            {
-              title: 'test4',
-              icon: 'jm-next',
-              target: ''
+              title: 'edit',
+              icon: 'jm-manage'
             }
           ]
         },
         {
-          title: 'Gallery',
-          icon: 'jm-play',
+          title: 'Words',
+          icon: 'jm-words',
+          target: '',
+          children: []
+        },
+        {
+          title: 'Game',
+          icon: 'jm-game',
           target: '',
           children: [
             {
-              title: 'test1',
-              icon: 'jm-next',
-              target: ''
-            },
-            {
-              title: 'test2',
-              icon: 'jm-next',
-              target: ''
-            },
-            {
-              title: 'test3',
-              icon: 'jm-next',
-              target: ''
-            },
-            {
-              title: 'test4',
-              icon: 'jm-next',
-              target: ''
+              title: 'tetris',
+              icon: 'jm-tetris'
             }
           ]
         },
         {
-          title: 'Gallery',
-          icon: 'jm-play',
+          title: 'Cloud',
+          icon: 'jm-cloud',
           target: '',
           children: [
             {
-              title: 'test1',
-              icon: 'jm-next',
-              target: ''
+              title: 'file',
+              icon: 'jm-file'
             },
             {
-              title: 'test2',
-              icon: 'jm-next',
-              target: ''
+              title: 'note',
+              icon: 'jm-note'
             },
             {
-              title: 'test3',
-              icon: 'jm-next',
-              target: ''
+              title: 'memo',
+              icon: 'jm-memo'
             },
             {
-              title: 'test4',
-              icon: 'jm-next',
-              target: ''
+              title: 'contact',
+              icon: 'jm-contact'
             }
           ]
         }
@@ -151,14 +105,22 @@ export default {
   flex-direction: row;
   justify-content: space-between;
 
-  .left {
+  .left, .middle, .right {
     box-sizing: border-box;
+  }
+
+  .left, .right {
+    width: 200px;
+  }
+
+  .left {
     padding-left: 10px;
   }
 
   .middle {
-    box-sizing: border-box;
     padding-top: 10px;
   }
+
+  // .right {}
 }
 </style>
