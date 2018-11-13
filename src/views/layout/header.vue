@@ -1,7 +1,8 @@
 <template>
   <div id="header">
     <div class="left">
-      <song-ctl />
+      <song-ctl class="song-ctl" />
+      <weixin-code class="weixin-code" />
     </div>
 
     <div class="middle">
@@ -9,20 +10,24 @@
     </div>
 
     <div class="right">
-      this is right
+      <login-register class="login-register" />
     </div>
   </div>
 </template>
 
 <script>
 import songCtl from './header/songCtl'
+import weixinCode from './header/weixinCode'
 import menuBar from '@/components/menuBar.vue'
+import loginRegister from './header/loginRegister'
 
 export default {
   name: 'Header',
   components: {
     songCtl,
-    menuBar
+    weixinCode,
+    menuBar,
+    loginRegister
   },
   data () {
     return {
@@ -105,22 +110,33 @@ export default {
   flex-direction: row;
   justify-content: space-between;
 
-  .left, .middle, .right {
-    box-sizing: border-box;
-  }
-
   .left, .right {
-    width: 200px;
+    flex: 1;
   }
 
   .left {
-    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+
+    .song-ctl {
+      margin-left: 10px;
+    }
+
+    .weixin-code {
+      margin-left: calc(~"(100% - 210px) / 2");
+    }
   }
 
   .middle {
     padding-top: 10px;
   }
 
-  // .right {}
+  .right {
+
+    .login-register {
+      margin-left: calc(~"(100% - 30px) / 2");
+      margin-top: 10px;
+    }
+  }
 }
 </style>
