@@ -16,18 +16,18 @@
     <div class="action-container">
       <div class="volume">
         <div class="progress" ref="volume-progress">
-          <span class="jm-music" ref="volume-btn" :style="`left: calc(${volume * 100}% - 15px)`" />
+          <span :class="`jm-${volume < 0.05 ? 'mute' : (volume < 0.3 ? 'volume-low' : (volume > 0.7 ? 'volume-hight' : 'volume-middle'))}`" ref="volume-btn" :style="`left: calc(${volume * 100}% - 15px)`" />
         </div>
       </div>
 
       <div class="song-list">
         <template v-if="songList.length">
-          <div class="song-item"
+          <div :class="`song-item ${currentSongIndex === index && 'current'}`"
             v-for="(song, index) in songList"
             :key="`${song.name}-${song.artist}`"
             :title="song.artist"
             @click="(playStatus = true) && (currentSongIndex = index)">
-            {{ song.name }}
+            <i class="jm-music" v-if="currentSongIndex === index" />{{ song.name }}
           </div>
 
           <div class="song-item"
@@ -308,8 +308,9 @@ export default {
 @import url('../../../assets/style/index.less');
 
 #song-ctl {
-  color: @TC;
+  width: 150px;
   height: 70px;
+  color: @TC;
   font-size: @SCTLFS;
 
   &:hover {
@@ -346,6 +347,12 @@ export default {
     }
   }
 
+  .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .song-audio {
     position: absolute;
     visibility: hidden;
@@ -377,6 +384,7 @@ export default {
     .STS(@TC);
     .SBS(fade(@BSC, 60));
     .active;
+    .ellipsis;
   }
 
   .action-container {
@@ -414,16 +422,28 @@ export default {
       .SBS(fade(@BSC, 60));
 
       .song-item {
+        position: relative;
         height: 25px;
         text-align: center;
         line-height: 25px;
         cursor: pointer;
+        .ellipsis;
+        .active(#fff);
 
         &:hover {
           .hover;
         }
 
-        .active(#fff);
+        &.current {
+          .SBS(fade(@BSC, 80));
+        }
+
+        .jm-music {
+          position: absolute;
+          left: 5px;
+          color: #fff;
+          .STS(@TC);
+        }
       }
     }
   }
