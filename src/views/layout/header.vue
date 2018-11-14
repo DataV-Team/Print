@@ -18,7 +18,6 @@
 <script>
 import songCtl from './header/songCtl'
 import weixinCode from './header/weixinCode'
-import menuBar from '@/components/menuBar.vue'
 import loginRegister from './header/loginRegister'
 
 export default {
@@ -26,7 +25,6 @@ export default {
   components: {
     songCtl,
     weixinCode,
-    menuBar,
     loginRegister
   },
   data () {
@@ -38,7 +36,7 @@ export default {
           target: '',
           children: [
             {
-              title: 'edit',
+              title: 'manage',
               icon: 'jm-manage'
             }
           ]
@@ -49,7 +47,7 @@ export default {
           target: '',
           children: [
             {
-              title: 'edit',
+              title: 'manage',
               icon: 'jm-manage'
             }
           ]
@@ -132,9 +130,11 @@ export default {
   }
 
   .right {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 
     .login-register {
-      margin-left: calc(~"(100% - 30px) / 2");
       margin-top: 10px;
     }
   }

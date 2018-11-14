@@ -1,14 +1,15 @@
 <template>
   <div id="home" refs="home">
     <canvas-b-g class="canvas-bg" />
-    <top-header />
-    <bottom-footer />
+    <top-header class="top-header" />
+    <middle-content />
+    <bottom-footer class="bottom-footer" />
   </div>
 </template>
 
 <script>
-import canvasBG from '@/components/canvasBG.vue'
 import topHeader from './header.vue'
+import middleContent from './content.vue'
 import bottomFooter from './footer.vue'
 
 export default {
@@ -17,8 +18,8 @@ export default {
     return {}
   },
   components: {
-    canvasBG,
     topHeader,
+    middleContent,
     bottomFooter
   },
   methods: {
@@ -32,8 +33,11 @@ export default {
 @import url('../../assets/style/index.less');
 
 #home {
+  position: relative;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 
   .canvas-bg {
     position: absolute;
@@ -42,6 +46,18 @@ export default {
     width: 100%;
     height: 100%;
     background-color: @BCC;
+  }
+
+  .top-header {
+    position: absolute;
+    width: 100%;
+    top: 0px;
+  }
+
+  .bottom-footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
   }
 }
 </style>
