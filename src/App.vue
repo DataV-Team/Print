@@ -8,6 +8,7 @@
 @import url('./assets/style/index.less');
 
 #app {
+  position: relative;
   width: 100%;
   height: 100%;
 }
