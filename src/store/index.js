@@ -5,10 +5,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-
+    musicAudio: ''
   },
   mutations: {
-
+    setMusicAudio (state, audio) {
+      state.musicAudio = audio
+    }
   },
   actions: {
 
