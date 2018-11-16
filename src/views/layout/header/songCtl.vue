@@ -201,7 +201,7 @@ export default {
      * @return     {undefined}  no return
      */
     initCurrentSong () {
-      const { playTypeIndex, playType, songList, randomSong, playStatus, songAudio } = this
+      const { playTypeIndex, playType, songList, randomSong } = this
 
       if (!songList.length) {
         this.playStatus = false
@@ -210,8 +210,6 @@ export default {
       }
 
       playType[playTypeIndex]['typeName'] === 'random' ? randomSong() : (this.currentSongIndex = 0)
-
-      playStatus && this.$nextTick(e => songAudio.play())
     },
     /**
      * @description             random song

@@ -1,17 +1,15 @@
 <template>
-  <div id="middle-content">
-    <router-view />
+  <div id="gallery">
+    this is gallery
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Content'
+  name: 'Gallery'
 }
 </script>
 
 <style lang="less">
-#middle-content {
-  flex: 1;
-}
+#gallery {}
 </style>
