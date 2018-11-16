@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 export default {
   name: 'SongCtl',
   data () {
@@ -59,24 +61,19 @@ export default {
       // song list
       songList: [
         {
-          name: 'good life',
-          artist: 'WeiZKliF',
-          src: 'http://test.jiaminghi.com/songs/good life.mp3'
+          name: '一生有你',
+          artist: 'Remix',
+          src: '/API/assets/1.MP3'
         },
         {
           name: '追光者',
           artist: '岑宁儿',
-          src: 'http://test.jiaminghi.com/songs/追光者.mp3'
+          src: '/API/assets/3.mp3'
         },
         {
-          name: 'I wanted you',
-          artist: 'starts',
-          src: 'http://test.jiaminghi.com/songs/I wanted you.mp3'
-        },
-        {
-          name: 'test',
-          artist: 'unkonw',
-          src: 'http://xmdx.sc.chinaz.com/Files/DownLoad/sound1/201811/10805.mp3'
+          name: '马冬梅',
+          artist: 'unkown',
+          src: '/API/assets/2.mp3'
         }
       ],
       // current song
@@ -135,7 +132,7 @@ export default {
      * @return     {undefined}  no return
      */
     initDom () {
-      const { $refs, volume } = this
+      const { $refs, volume, setMusicAudio } = this
 
       this.songAudio = $refs['song-audio']
 
@@ -144,6 +141,8 @@ export default {
       this.volumeProgressWidth = $refs['volume-progress'].clientWidth
 
       this.songAudio.volume = volume
+
+      setMusicAudio(this.songAudio)
     },
     /**
      * @description             init volume set extend
@@ -202,7 +201,7 @@ export default {
      * @return     {undefined}  no return
      */
     initCurrentSong () {
-      const { playTypeIndex, playType, songList, randomSong } = this
+      const { playTypeIndex, playType, songList, randomSong, playStatus, songAudio } = this
 
       if (!songList.length) {
         this.playStatus = false
@@ -211,6 +210,8 @@ export default {
       }
 
       playType[playTypeIndex]['typeName'] === 'random' ? randomSong() : (this.currentSongIndex = 0)
+
+      playStatus && this.$nextTick(e => songAudio.play())
     },
     /**
      * @description             random song
@@ -294,7 +295,8 @@ export default {
       localStorage.setItem('volume', volume)
       localStorage.setItem('playTypeIndex', playTypeIndex)
       localStorage.setItem('playStatus', playStatus)
-    }
+    },
+    ...mapMutations(['setMusicAudio'])
   },
   mounted () {
     const { init } = this
