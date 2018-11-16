@@ -1,20 +1,22 @@
 <template>
   <div id="bottom">
-    this is footer
+    <audio-canvas-frequency :audio="musicAudio" />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-  name: 'Bottom'
+  name: 'Bottom',
+  computed: {
+    ...mapState(['musicAudio'])
+  }
 }
 </script>
 
 <style lang="less">
 #bottom {
-  height: 100px;
-  line-height: 100px;
-  text-align: center;
-  box-shadow: 0 0 3px red;
+  height: 300px;
 }
 </style>
