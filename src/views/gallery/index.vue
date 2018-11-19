@@ -6,10 +6,21 @@
 
 <script>
 export default {
-  name: 'Gallery'
+  name: 'Gallery',
+  props: ['album'],
+  data () {
+    return {}
+  },
+  methods: {
+  },
+  created () {
+  }
 }
 </script>
 
 <style lang="less">
-#gallery {}
+#gallery {
+  width: 100%;
+  height: 100%;
+}
 </style>
