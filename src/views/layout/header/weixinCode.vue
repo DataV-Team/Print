@@ -84,6 +84,7 @@ export default {
     border-radius: 15px;
     overflow: hidden;
     transition: all 0.3s ease;
+    z-index: 9;
     .SBS(fade(@BSC, 60));
 
     &:hover {
