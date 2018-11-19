@@ -63,17 +63,17 @@ export default {
         {
           name: '一生有你',
           artist: 'Remix',
-          src: '/API/assets/1.MP3'
+          src: '/API/assets/temp/audio/1.MP3'
         },
         {
           name: '追光者',
           artist: '岑宁儿',
-          src: '/API/assets/3.mp3'
+          src: '/API/assets/temp/audio/3.mp3'
         },
         {
           name: '马冬梅',
           artist: 'unkown',
-          src: '/API/assets/2.mp3'
+          src: '/API/assets/temp/audio/2.mp3'
         }
       ],
       // current song
