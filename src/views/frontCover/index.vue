@@ -4,10 +4,23 @@
 
       <div class="middle-title">{{ cover[currentMiddleIndex].describe }}</div>
 
-      <div v-for="(photo, index) in currentCover"
+      <div v-for="(photo, index) in cover"
         :key="index"
-        :class="`img-container ${currentCover[index].class}`">
-        <img :src="currentCover[index].src" />
+        :class="`img-container ${photoClass[currentMiddleIndex][index]}`"
+        @click="turnCover(photoClass[currentMiddleIndex][index])">
+        <img :src="photo.src" />
+
+        <i class="jm-left" v-show="photoClass[currentMiddleIndex][index].indexOf('left') !== -1" />
+        <i :class="`jm-${autoPlayStatus ? 'pause' : 'play'}`" v-show="photoClass[currentMiddleIndex][index] === 'middle'"
+          @click="autoPlay" />
+        <i class="jm-right" v-show="photoClass[currentMiddleIndex][index].indexOf('right') !== -1" />
+      </div>
+
+      <div class="square-container">
+        <div :class="`square ${currentMiddleIndex === index && 'current'}`"
+          v-for="(square, index) in  cover"
+          :key="index"
+          @click="currentMiddleIndex = index" />
       </div>
 
     </div>
@@ -49,10 +62,14 @@ export default {
           describe: 'PIC 7'
         }
       ],
-      // current cover
-      currentCover: [],
+      // photo class
+      photoClass: [],
       // current middle index
-      currentMiddleIndex: 0
+      currentMiddleIndex: 0,
+      // auto play status
+      autoPlayStatus: false,
+      // auto play time
+      autoPlayTime: 1500
     }
   },
   methods: {
@@ -61,63 +78,73 @@ export default {
      * @return     {undefined}  no return
      */
     init () {
-      const { cover, currentCover } = this
+      const { cover, photoClass } = this
 
       cover.length < 5 && (cover.push(...new Array(5 - cover.length).fill({ src: '', describe: '' })))
 
-      currentCover[0] = { src: cover[cover.length - 2].src, class: 'left-small' }
-      currentCover[1] = { src: cover[cover.length - 1].src, class: 'left' }
-      currentCover[2] = { src: cover[0].src, class: 'middle' }
-      currentCover[3] = { src: cover[1].src, class: 'right' }
-      currentCover[4] = { src: cover[2].src, class: 'right-small' }
+      const coverNum = cover.length
+
+      photoClass.push(...new Array(coverNum).fill(null).map((t, index) => {
+        const tempClassArray = new Array(coverNum).fill('hide')
+
+        tempClassArray[index] = 'middle'
+
+        const leftIndex = (index - 1 < 0) ? (coverNum + index - 1) : index - 1
+        const leftSmallIndex = (index - 2 < 0) ? (coverNum + index - 2) : index - 2
+        const rightIndex = (index + 1 >= coverNum) ? (index + 1 - coverNum) : index + 1
+        const rightSmallIndex = (index + 2 >= coverNum) ? (index + 2 - coverNum) : index + 2
+
+        tempClassArray[leftIndex] = 'left'
+        tempClassArray[leftSmallIndex] = 'left-small'
+        tempClassArray[rightIndex] = 'right'
+        tempClassArray[rightSmallIndex] = 'right-small'
+
+        return tempClassArray
+      }))
     },
     /**
      * @description             turn cover
      * @return     {undefined}  no return
      */
-    turnCover () {
-      const { cover, currentCover, currentMiddleIndex } = this
+    turnCover (photoClass) {
+      const { cover: { length: coverNum } } = this
 
-      
+      switch (photoClass) {
+        case 'left':
+        case 'left-small':
+          --this.currentMiddleIndex < 0 && (this.currentMiddleIndex = coverNum - 1)
+          break
+        case 'right':
+        case 'right-small':
+          ++this.currentMiddleIndex === coverNum && (this.currentMiddleIndex = 0)
+          break
+      }
     },
     /**
-     * @description             next or prev
+     * @description             auto play
      * @return     {undefined}  no return
      */
-    nextOrPrev (prev = false) {
-      const { cover, currentCover } = this
+    autoPlay () {
+      const { autoPlayStatus, doAutoPlay } = this
 
-      const coverNum = cover.length
+      this.autoPlayStatus = !autoPlayStatus
 
-      if (prev) {
-        --this.currentMiddleIndex < 0 && (this.currentMiddleIndex = coverNum - 1)
+      if (this.autoPlayStatus) doAutoPlay()
+    },
+    /**
+     * @description             do auto play
+     * @return     {undefined}  no return
+     */
+    doAutoPlay () {
+      const { autoPlayStatus } = this
 
-        let addPhotoIndex = this.currentMiddleIndex - 2
-        addPhotoIndex - coverNum >= 0 && (addPhotoIndex = coverNum - Math.abs(addPhotoIndex))
+      if (!autoPlayStatus) return
 
-        currentCover[4].src = cover[addPhotoIndex].src
+      const { autoPlayTime, cover: { length: coverNum }, currentMiddleIndex, doAutoPlay } = this
 
-        currentCover[0].class = 'left'
-        currentCover[1].class = 'middle'
-        currentCover[2].class = 'right'
-        currentCover[3].class = 'right-small'
-        currentCover[4].class = 'left-small'
-      }
+      currentMiddleIndex + 1 === coverNum ? (this.currentMiddleIndex = 0) : this.currentMiddleIndex++
 
-      if (!prev) {
-        ++this.currentMiddleIndex === coverNum && (this.currentMiddleIndex = 0)
-
-        let addPhotoIndex = this.currentMiddleIndex + 2
-        addPhotoIndex - coverNum >= 0 && (addPhotoIndex = 2 * coverNum - addPhotoIndex - 1)
-
-        currentCover[0].src = cover[addPhotoIndex].src
-
-        currentCover[0].class = 'right-small'
-        currentCover[1].class = 'left-small'
-        currentCover[2].class = 'left'
-        currentCover[3].class = 'middle'
-        currentCover[4].class = 'right'
-      }
+      setTimeout(doAutoPlay, autoPlayTime)
     }
   },
   created () {
@@ -144,7 +171,6 @@ export default {
     left: 50%;
     margin-top: -50px;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 3px red;
 
     .middle-title {
       position: absolute;
@@ -160,6 +186,7 @@ export default {
     }
 
     .middle {
+      top: 0px;
       width: 630px;
       height: 350px;
       margin-left: 0px;
@@ -181,7 +208,7 @@ export default {
       margin-left: 400px;
     }
 
-    .left-small, .right-small {
+    .left-small, .right-small, .hide {
       top: 93px;
       width: 300px;
       height: 165px;
@@ -204,11 +231,15 @@ export default {
       border-radius: 15px;
       left: 50%;
       transform: translate(-50%);
-      transition: 0.3s;
+      transition: .3s;
       cursor: pointer;
       .SBS(fade(@TC, 60));
 
       &:hover {
+        .jm-left, .jm-right, .jm-play, .jm-pause {
+          opacity: 1;
+        }
+
         .SBS(fade(@TC, 80));
       }
 
@@ -217,6 +248,64 @@ export default {
         height: 100%;
         border-radius: 15px;
       }
+    }
+
+    .square-container {
+      position: absolute;
+      bottom: 15px;
+      display: flex;
+      flex-direction: row;
+      left: 50%;
+      transform: translate(-50%);
+
+      div {
+        width: 30px;
+        height: 10px;
+        background-color: fade(@TC, 10);
+        margin: 0 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        .SBS(fade(@TC, 60));
+
+        &.current {
+          background-color: fade(@TC, 80);
+        }
+
+        &:hover {
+          background-color: fade(@TC, 80);
+        }
+      }
+    }
+
+    .jm-left, .jm-right, .jm-play, .jm-pause {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: transparent;
+      opacity: 0;
+      .STS(@TC);
+    }
+
+    .jm-left {
+      left: 0px;
+    }
+
+    .jm-right {
+      right: 0px;
+    }
+
+    .left .jm-left, .right .jm-right {
+      font-size: 80px;
+    }
+
+    .left-small .jm-left, .right-small .jm-right {
+      font-size: 50px;
+    }
+
+    .jm-play, .jm-pause {
+      left: 50%;
+      font-size: 100px;
+      transform: translate(-50%, -50%);
     }
   }
 }
