@@ -13,5 +13,6 @@ export default {
 <style lang="less">
 #middle-content {
   flex: 1;
+  height: 100%;
 }
 </style>
