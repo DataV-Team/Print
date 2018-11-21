@@ -52,14 +52,6 @@ export default {
         {
           src: '/API/assets/temp/photo/5.jpg',
           describe: 'PIC 5'
-        },
-        {
-          src: '/API/assets/temp/photo/6.jpg',
-          describe: 'PIC 6'
-        },
-        {
-          src: '/API/assets/temp/photo/7.jpg',
-          describe: 'PIC 7'
         }
       ],
       // photo class
@@ -69,7 +61,7 @@ export default {
       // auto play status
       autoPlayStatus: false,
       // auto play time
-      autoPlayTime: 1500
+      autoPlayTime: 3000
     }
   },
   methods: {
