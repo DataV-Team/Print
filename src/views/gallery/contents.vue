@@ -5,7 +5,7 @@
 
         <div class="album" v-for="(album, index) in contents" :key="index" v-if="index % 4 === column">
           <img :src="album.coverSrc" />
-          <div class="info">
+          <div class="info" @click="$router.push(`/home/gallery/${album.name}`)">
             <div class="info-container">
               <div class="name">{{ album.name }}</div>
               <div class="describe">{{ album.describe }}</div>
@@ -92,11 +92,11 @@ export default {
      * @return     {undefined}  no return
      */
     init () {
-      const { contents: { length }, columns, calcVisibleCover } = this
+      const { contents: { length }, columns, calcVisibleCover, $nextTick } = this
 
       columns.push(...new Array(length < 4 ? length : 4).fill('').map((t, i) => i))
 
-      calcVisibleCover()
+      $nextTick(calcVisibleCover)
     },
     /**
      * @description             calc visible cover in gallery scroll container
@@ -105,6 +105,7 @@ export default {
     calcVisibleCover () {
       if (!this.albums) {
         this.albums = Array.from(document.getElementsByClassName('album'))
+
         this.galleryScrollContainer = this.$refs['gallery-scroll-container']
       }
 
@@ -129,7 +130,7 @@ export default {
       const { calcVisibleCoverDebounceFun, debounce } = this
 
       if (!calcVisibleCoverDebounceFun) {
-        this.calcVisibleCoverDebounceFun = debounce(200, this.calcVisibleCover)
+        this.calcVisibleCoverDebounceFun = debounce(100, this.calcVisibleCover)
 
         this.calcVisibleCoverDebounceFun()
       } else {
@@ -159,10 +160,11 @@ export default {
     flex-direction: row;
     box-sizing: border-box;
     overflow-y: scroll;
-    padding: 0 100px 100px 100px;
+    padding: 0 100px;
 
     &.less-four {
       align-items: center;
+      padding: 0 100px 100px 100px;
     }
   }
 
@@ -203,6 +205,7 @@ export default {
       .info {
         border: 3px solid #fff;
         transform: translate(-50%, -50%) scale(0.9);
+        text-shadow: 0 0 0px !important;
 
         .info-container {
           background-color: @GCIBC;
@@ -229,6 +232,7 @@ export default {
       transform: translate(-50%, -50%) scale(1);
       transition: all 0.3s;
       color: #fff;
+      .STS(gray);
 
       .info-container {
         position: absolute;
