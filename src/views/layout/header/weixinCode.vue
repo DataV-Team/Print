@@ -1,7 +1,7 @@
 <template>
   <div id="weixin-code">
     <div class="small-photo">
-      <img class="photo" src="../../../assets/img/jm.jpg" >
+      <img class="photo" src="../../../assets/img/jm.jpg" @click="$router.push('/home/frontCover')" />
       <img class="qr-code" src="../../../assets/img/qrCode.png" @click="largeCardStatus = !largeCardStatus" />
     </div>
 
