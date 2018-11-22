@@ -149,114 +149,114 @@ export default {
 <style lang="less">
 @import url('../../assets/style/index.less');
 
-#gallery-contents {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: space-around;
+// #gallery-contents {
+//   width: 100%;
+//   height: 100%;
+//   display: flex;
+//   justify-content: space-around;
 
-  .gallery-scroll-container {
-    display: flex;
-    flex-direction: row;
-    box-sizing: border-box;
-    overflow-y: scroll;
-    padding: 0 100px;
+//   .gallery-scroll-container {
+//     display: flex;
+//     flex-direction: row;
+//     box-sizing: border-box;
+//     overflow-y: scroll;
+//     padding: 0 100px;
 
-    &.less-four {
-      align-items: center;
-      padding: 0 100px 100px 100px;
-    }
-  }
+//     &.less-four {
+//       align-items: center;
+//       padding: 0 100px 100px 100px;
+//     }
+//   }
 
-  .column {
-    position: relative;
-    flex: 1;
-    margin: 0 10px;
-    max-width: 300px;
-    padding: 100px 0px;
-  }
+//   .column {
+//     position: relative;
+//     flex: 1;
+//     margin: 0 10px;
+//     max-width: 300px;
+//     padding: 100px 0px;
+//   }
 
-  .album {
-    position: relative;
-    box-sizing: border-box;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 15px;
-    opacity: 0.15;
-    transition: all 1s;
-    overflow: hidden;
-    cursor: pointer;
-    .SBS(fade(@BSC, 60));
+//   .album {
+//     position: relative;
+//     box-sizing: border-box;
+//     width: 100%;
+//     padding: 10px;
+//     margin-bottom: 10px;
+//     border-radius: 15px;
+//     opacity: 0.15;
+//     transition: all 1s;
+//     overflow: hidden;
+//     cursor: pointer;
+//     .SBS(fade(@BSC, 60));
 
-    &.current {
-      opacity: 1;
-    }
+//     &.current {
+//       opacity: 1;
+//     }
 
-    &:hover {
-      .SBS(fade(@BSC, 80));
-      opacity: 1;
+//     &:hover {
+//       .SBS(fade(@BSC, 80));
+//       opacity: 1;
 
-      img {
-        opacity: 1;
-        transform: scale(1.1);
-      }
+//       img {
+//         opacity: 1;
+//         transform: scale(1.1);
+//       }
 
-      .info {
-        border: 3px solid #fff;
-        transform: translate(-50%, -50%) scale(0.9);
-        text-shadow: 0 0 0px !important;
+//       .info {
+//         border: 3px solid #fff;
+//         transform: translate(-50%, -50%) scale(0.9);
+//         text-shadow: 0 0 0px !important;
 
-        .info-container {
-          background-color: @GCIBC;
-        }
-      }
-    }
+//         .info-container {
+//           background-color: @GCIBC;
+//         }
+//       }
+//     }
 
-    img {
-      width: 100%;
-      border-radius: 15px;
-      transform: scale(1);
-      transition: all 0.3s;
-      opacity: 0.8;
-      cursor: pointer;
-    }
+//     img {
+//       width: 100%;
+//       border-radius: 15px;
+//       transform: scale(1);
+//       transition: all 0.3s;
+//       opacity: 0.8;
+//       cursor: pointer;
+//     }
 
-    .info {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 100%;
-      height: 100%;
-      border: 1px solid #fff;
-      transform: translate(-50%, -50%) scale(1);
-      transition: all 0.3s;
-      color: #fff;
-      .STS(gray);
+//     .info {
+//       position: absolute;
+//       top: 50%;
+//       left: 50%;
+//       width: 100%;
+//       height: 100%;
+//       border: 1px solid #fff;
+//       transform: translate(-50%, -50%) scale(1);
+//       transition: all 0.3s;
+//       color: #fff;
+//       .STS(gray);
 
-      .info-container {
-        position: absolute;
-        width: 100%;
-        bottom: 30px;
-      }
+//       .info-container {
+//         position: absolute;
+//         width: 100%;
+//         bottom: 30px;
+//       }
 
-      .name, .describe {
-        text-indent: 40px;
-      }
+//       .name, .describe {
+//         text-indent: 40px;
+//       }
 
-      .name {
-        height: 40px;
-        font-size: @GCNFS;
-        line-height: 40px;
-        font-weight: bold;
-      }
+//       .name {
+//         height: 40px;
+//         font-size: @GCNFS;
+//         line-height: 40px;
+//         font-weight: bold;
+//       }
 
-      .describe {
-        height: 30px;
-        font-size: @GCDFS;
-        line-height: 30px;
-      }
-    }
-  }
-}
+//       .describe {
+//         height: 30px;
+//         font-size: @GCDFS;
+//         line-height: 30px;
+//       }
+//     }
+//   }
+// }
 </style>

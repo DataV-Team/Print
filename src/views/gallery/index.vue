@@ -23,7 +23,6 @@ export default {
   methods: {
   },
   created () {
-    console.error(this.album)
   }
 }
 </script>
