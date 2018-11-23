@@ -2,12 +2,12 @@
   <div class="menu-bar">
     <template v-if="navBar.length">
       <div class="menu-item" v-for="menu in navBar" :key="`${menu.title}:${menu.target}`">
-        <div class="menu-title">
+        <div class="menu-title" @click="$router.push(menu.target)">
           <i :class="`${menu.icon} title-icon`" v-if="menu.icon" />{{ menu.title }}
         </div>
 
         <div class="menu-children" v-if="menu.children && menu.children.length">
-          <div class="children-item" v-for="child in menu.children" :key="child.title">
+          <div class="children-item" v-for="child in menu.children" :key="child.title" @click="$router.push(child.target)">
             <i :class="`${child.icon} title-icon`" v-if="child.icon" />{{ child.title }}
           </div>
         </div>
