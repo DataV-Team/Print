@@ -1,7 +1,7 @@
 <template>
   <div id="home" refs="home">
     <canvas-b-g class="canvas-bg" />
-    <top-header class="top-header" />
+    <top-header :class="`top-header ${fadeHeader && 'fade'}`" />
     <middle-content />
     <bottom-footer class="bottom-footer" />
   </div>
@@ -12,6 +12,8 @@ import topHeader from './header.vue'
 import middleContent from './content.vue'
 import bottomFooter from './footer.vue'
 
+import { mapState } from 'vuex'
+
 export default {
   name: 'Home',
   data () {
@@ -21,6 +23,9 @@ export default {
     topHeader,
     middleContent,
     bottomFooter
+  },
+  computed: {
+    ...mapState(['fadeHeader'])
   },
   methods: {
   },
@@ -52,6 +57,10 @@ export default {
     position: absolute;
     width: 100%;
     top: 0px;
+
+    &.fade {
+      top: -70px !important;
+    }
   }
 
   .bottom-footer {

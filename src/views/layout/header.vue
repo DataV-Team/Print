@@ -102,12 +102,12 @@ export default {
 @import url('../../assets/style/index.less');
 
 #header {
-  position: relative;
   height: 70px;
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  transition: all 0.3s;
   z-index: 9;
 
   .left, .right {
