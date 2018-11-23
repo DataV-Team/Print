@@ -8,6 +8,8 @@ const FrontCover = r => require.ensure([], () => r(require('../views/frontCover/
 
 const Gallery = r => require.ensure([], () => r(require('../views/gallery/index.vue')), 'gallery')
 
+const Video = r => require.ensure([], () => r(require('../views/video/index.vue')), 'video')
+
 Vue.use(Router)
 
 export default new Router({
@@ -30,6 +32,12 @@ export default new Router({
           path: 'gallery/:album?',
           name: 'gallery',
           component: Gallery,
+          props: true
+        },
+        {
+          path: 'video',
+          name: 'video',
+          component: Video,
           props: true
         }
       ]
