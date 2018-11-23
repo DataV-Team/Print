@@ -33,7 +33,7 @@ export default {
         {
           title: 'Gallery',
           icon: 'jm-gallery',
-          target: '',
+          target: '/home/gallery',
           children: [
             {
               title: 'manage',
@@ -44,7 +44,7 @@ export default {
         {
           title: 'Video',
           icon: 'jm-video',
-          target: '',
+          target: '/home/video',
           children: [
             {
               title: 'manage',
