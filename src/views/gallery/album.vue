@@ -1,5 +1,5 @@
 <template>
-  <div id="album">
+  <div id="gallery-album">
     <photo-cover :imgs="albums" :column="3" width="400" @scroll="setFadeHeader" @click="doZoom" :class="{fade: zoomIndex !== false}" />
 
     <div class="zoom" v-if="zoomIndex !== false">
@@ -117,7 +117,7 @@ export default {
 <style lang="less">
 @import url('../../assets/style/index.less');
 
-#album {
+#gallery-album {
   position: relative;
   width: 100%;
   height: 100%;
