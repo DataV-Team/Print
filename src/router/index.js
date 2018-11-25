@@ -35,7 +35,7 @@ export default new Router({
           props: true
         },
         {
-          path: 'video',
+          path: 'video/:album?',
           name: 'video',
           component: Video,
           props: true
