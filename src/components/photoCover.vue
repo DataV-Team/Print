@@ -8,7 +8,7 @@
         <div class="info" v-if="info" :title="img.title">
           <div class="border" />
           <div class="info-container">
-            <div class="title">{{ img.title }}</div>
+            <div class="title">{{ img.album }}</div>
             <div class="describe">{{ img.describe }}</div>
           </div>
         </div>
