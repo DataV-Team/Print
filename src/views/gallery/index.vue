@@ -1,19 +1,19 @@
 <template>
   <div id="gallery">
-    <album :album="album" v-if="album" />
+    <gallery-album :album="album" v-if="album" />
 
     <gallery-contents v-else />
   </div>
 </template>
 
 <script>
-import album from './album'
+import galleryAlbum from './album'
 import galleryContents from './contents'
 
 export default {
   name: 'Gallery',
   components: {
-    album,
+    galleryAlbum,
     galleryContents
   },
   props: ['album'],

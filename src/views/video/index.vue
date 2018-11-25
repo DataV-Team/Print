@@ -1,69 +1,23 @@
 <template>
   <div id="video">
-    <video-cover :covers="contents" />
+    <video-album :album="album" v-if="album" />
+
+    <video-contents v-else />
   </div>
 </template>
 
 <script>
+import videoAlbum from './album.vue'
+import videoContents from './contents'
+
 export default {
   name: 'Video',
-  data () {
-    return {
-      contents: [
-        {
-          Album: 'Video',
-          coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        },
-        // {
-        //   Album: 'Video',
-        //   coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        // },
-        // {
-        //   Album: 'Video',
-        //   coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        // },
-        // {
-        //   Album: 'Video',
-        //   coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        // },
-        // {
-        //   Album: 'Video',
-        //   coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        // },
-        // {
-        //   Album: 'Video',
-        //   coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        // },
-        // {
-        //   Album: 'Video',
-        //   coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        // },
-        // {
-        //   Album: 'Video',
-        //   coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        // },
-        // {
-        //   Album: 'Video',
-        //   coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        // },
-        // {
-        //   Album: 'Video',
-        //   coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        // },
-        // {
-        //   Album: 'Video',
-        //   coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        // },
-        // {
-        //   Album: 'Video',
-        //   coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        // },
-        {
-          Album: 'Video',
-          coverSrc: '/API/assets/temp/videoCover/1.jpg'
-        }
-      ]
-    }
+  props: ['album'],
+  components: {
+    videoAlbum,
+    videoContents
+  },
+  methods: {
   }
 }
 </script>
