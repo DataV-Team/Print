@@ -15,52 +15,52 @@ export default {
       contents: [
         {
           src: '/API/assets/temp/pcontents/1.jpg',
-          title: 'Album1',
+          album: 'Album1',
           describe: 'This is album 1'
         },
         {
           src: '/API/assets/temp/pcontents/2.jpg',
-          title: 'Album2',
+          album: 'Album2',
           describe: 'This is album 2'
         },
         {
           src: '/API/assets/temp/pcontents/3.jpg',
-          title: 'Album3',
+          album: 'Album3',
           describe: 'This is album 3'
         },
         {
           src: '/API/assets/temp/pcontents/4.jpg',
-          title: 'Album4',
+          album: 'Album4',
           describe: 'This is album 4'
         },
         {
           src: '/API/assets/temp/pcontents/5.jpg',
-          title: 'Album5',
+          album: 'Album5',
           describe: 'This is album 5'
         },
         {
           src: '/API/assets/temp/pcontents/6.jpg',
-          title: 'Album6',
+          album: 'Album6',
           describe: 'This is album 6'
         },
         {
           src: '/API/assets/temp/pcontents/7.jpg',
-          title: 'Album7',
+          album: 'Album7',
           describe: 'This is album 7'
         },
         {
           src: '/API/assets/temp/pcontents/8.jpg',
-          title: 'Album8',
+          album: 'Album8',
           describe: 'This is album 8'
         },
         {
           src: '/API/assets/temp/pcontents/9.jpg',
-          title: 'Album9',
+          album: 'Album9',
           describe: 'This is album 9'
         },
         {
-          title: 'Album10',
           src: '/API/assets/temp/pcontents/10.jpg',
+          album: 'Album10',
           describe: 'This is album 10'
         }
       ]
@@ -74,7 +74,7 @@ export default {
     turnToAlbum (index) {
       const { $router, contents } = this
 
-      $router.push(`/home/gallery/${contents[index].title}`)
+      $router.push(`/home/gallery/${contents[index].album}`)
     },
     ...mapMutations(['setFadeHeader'])
   },
