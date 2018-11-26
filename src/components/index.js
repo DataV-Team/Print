@@ -10,6 +10,10 @@ import photoCover from './photoCover.vue'
 
 import videoCover from './videoCover.vue'
 
+import videoPlayer from './videoPlayer.vue'
+
+import progresser from './progresser.vue'
+
 export default function (Vue) {
   Vue.component('canvasBG', canvasBG)
   Vue.component('menuBar', menuBar)
@@ -17,4 +21,6 @@ export default function (Vue) {
   Vue.component('audioCanvasFrequency', audioCanvasFrequency)
   Vue.component('photoCover', photoCover)
   Vue.component('videoCover', videoCover)
+  Vue.component('videoPlayer', videoPlayer)
+  Vue.component('progresser', progresser)
 }
