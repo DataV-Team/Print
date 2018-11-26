@@ -1,8 +1,8 @@
 <template>
   <div id="video-album">
-    <video-cover :class="{ fade: palyVideoIndex !== false}" :covers="contents" @scroll="setFadeHeader" />
+    <video-cover :class="{ fade: palyVideoIndex !== false}" :covers="contents" @scroll="setFadeHeader" @click="turnToVideo" />
 
-    <div class="play-video" v-if="palyVideoIndex !== false"></div>
+    <video-player :resource="contents[palyVideoIndex]" :autoplay="false" v-if="palyVideoIndex !== false" />
   </div>
 </template>
 
@@ -17,56 +17,69 @@ export default {
       // all video contents
       contents: [
         {
-          album: 'Video321',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          album: 'Video313',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          album: 'Video313',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          album: 'Video1313',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          album: 'Video313',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          album: 'Video2211',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          album: 'Video  12313',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          album: 'Video3123',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          album: 'Video2',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          album: 'Video31231',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          Album: 'Video 3123',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          Album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          album: 'Video3213',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         },
         {
-          album: 'Video3123',
-          coverSrc: '/API/assets/temp/videoCover/2.jpg'
+          album: '第一集',
+          coverSrc: '/API/assets/temp/videoCover/2.jpg',
+          videoSrc: '/API/assets/temp/video/1.mp4'
         }
       ],
       //  current play video index
@@ -74,7 +87,22 @@ export default {
     }
   },
   methods: {
+    init () {
+      const { contents, album } = this
+
+      let currentVideo = album.split('-')
+
+      if (currentVideo[1]) this.palyVideoIndex = contents.findIndex(({ album: a }) => a === currentVideo[1])
+    },
+    turnToVideo (index) {
+      this.palyVideoIndex = index
+    },
     ...mapMutations(['setFadeHeader'])
+  },
+  created () {
+    const { init } = this
+
+    init()
   }
 }
 </script>
@@ -83,5 +111,13 @@ export default {
 #video-album {
   width: 100%;
   height: 100%;
+
+  .fade {
+    opacity: 0;
+  }
+
+  .video-cover {
+    transition: all 0.3s;
+  }
 }
 </style>
