@@ -174,8 +174,13 @@ export default {
     .SBS(fade(@BSC, 60));
   }
 
+  .progress {
+    position: absolute;
+  }
+
   .jm-full-screen, .jm-video-play, .jm-video-pause {
     position: absolute;
+    top: 3px;
     font-size: 20px;
     line-height: 30px;
     color: @TC;
@@ -193,6 +198,7 @@ export default {
 
   .current-time, .duration-time {
     position: absolute;
+    height: 27px;
     font-size: 20px;
     line-height: 32px;
     top: 3px;
