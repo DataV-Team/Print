@@ -1,7 +1,7 @@
 <template>
-  <div class="progress" :ref="pgsRef">
+  <div class="progress" :ref="pgsRef" @click="turnProgress">
     <div class="current-progress" :style="`width: ${progress * 100}%;`" />
-    <div class="change-progress-btn" :style="`left: ${progress * 100}%;`" @mousedown="changeProgressStart" />
+    <div class="change-progress-btn" :style="`left: ${progress * 100}%;`" @click.stop @mousedown="changeProgressStart" />
   </div>
 </template>
 
@@ -16,7 +16,6 @@ export default {
       progresser: '',
       // progresser width
       allWidth: 0,
-      // current progress
       // last drag x pos
       lastDragXPos: false
     }
@@ -54,19 +53,23 @@ export default {
     changeProgress ({ pageX }) {
       if (!pageX) return
 
-      const { lastDragXPos, allWidth, progress } = this
+      const { lastDragXPos, allWidth, progress, emitChangeEvent } = this
 
       const addValue = (pageX - lastDragXPos) / allWidth
 
-      const currentProgress = progress + addValue
+      let currentProgress = progress + addValue
 
-      currentProgress > 1 && (this.progress = 1)
-      currentProgress < 0 && (this.progress = 0)
+      currentProgress > 1 && (currentProgress = 1)
+      currentProgress < 0 && (currentProgress = 0)
 
       this.lastDragXPos = pageX
 
-      this.$emit('change', currentProgress)
+      emitChangeEvent(currentProgress)
     },
+    /**
+     * @description             change progress end
+     * @return     {undefined}  no return
+     */
     changeProgressEnd () {
       this.lastDragXPos = false
 
@@ -75,6 +78,24 @@ export default {
       document.removeEventListener('mousemove', changeProgress)
 
       document.removeEventListener('mouseup', changeProgressEnd)
+    },
+    /**
+     * @description             turn progress
+     * @return     {undefined}  no return
+     */
+    turnProgress ({ offsetX }) {
+      const { allWidth, emitChangeEvent } = this
+
+      const progress = offsetX / allWidth
+
+      emitChangeEvent(progress)
+    },
+    /**
+     * @description             emit change event
+     * @return     {undefined}  no return
+     */
+    emitChangeEvent (value) {
+      this.$emit('change', value)
     }
   },
   mounted () {
@@ -92,12 +113,14 @@ export default {
   position: relative;
   width: 100%;
   height: 3px;
+  cursor: pointer;
+  transition: all 0.3s;
   .SBS(fade(@BSC, 60));
 
   .current-progress {
     position: absolute;
     width: 300px;
-    height: 3px;
+    height: 100%;
     top: 0px;
     left: 0px;
     background: linear-gradient(to right, #6ed4d3, #f5738f, #4bb7e4);
