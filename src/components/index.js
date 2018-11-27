@@ -14,6 +14,8 @@ import videoPlayer from './videoPlayer.vue'
 
 import progresser from './progresser.vue'
 
+import loading from './loading.vue'
+
 export default function (Vue) {
   Vue.component('canvasBG', canvasBG)
   Vue.component('menuBar', menuBar)
@@ -23,4 +25,5 @@ export default function (Vue) {
   Vue.component('videoCover', videoCover)
   Vue.component('videoPlayer', videoPlayer)
   Vue.component('progresser', progresser)
+  Vue.component('loading', loading)
 }
