@@ -2,7 +2,13 @@
   <div id="video-album">
     <video-cover :class="{ fade: palyVideoIndex !== false}" :covers="contents" @scroll="setFadeHeader" @click="turnToVideo" />
 
-    <video-player :resource="contents[palyVideoIndex]" :autoplay="false" v-if="palyVideoIndex !== false" />
+    <video-player
+      v-if="palyVideoIndex !== false"
+      :resource="contents[palyVideoIndex]"
+      :autoplay="false"
+      :volume="volume"
+      :currentTime="videoCurrentTime"
+      @playing="setCurrentTime" />
   </div>
 </template>
 
@@ -83,10 +89,18 @@ export default {
         }
       ],
       //  current play video index
-      palyVideoIndex: false
+      palyVideoIndex: false,
+      // video current time
+      videoCurrentTime: 0,
+      // video volume
+      volume: 0.5
     }
   },
   methods: {
+    /**
+     * @description             init
+     * @return     {undefined}  no return
+     */
     init () {
       const { contents, album } = this
 
@@ -94,8 +108,21 @@ export default {
 
       if (currentVideo[1]) this.palyVideoIndex = contents.findIndex(({ album: a }) => a === currentVideo[1])
     },
+    /**
+     * @description             turn to video
+     * @return     {undefined}  no return
+     */
     turnToVideo (index) {
       this.palyVideoIndex = index
+
+      this.videoCurrentTime = 0
+    },
+    /**
+     * @description             set current video current time
+     * @return     {undefined}  no return
+     */
+    setCurrentTime (time) {
+      this.videoCurrentTime = time
     },
     ...mapMutations(['setFadeHeader'])
   },
