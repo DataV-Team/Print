@@ -3,17 +3,18 @@
     <video-cover :class="{ fade: palyVideoIndex !== false}" :covers="contents" @scroll="setFadeHeader" @click="turnToVideo" />
 
     <video-player
-      v-if="palyVideoIndex !== false"
+      v-show="palyVideoIndex !== false"
       :resource="contents[palyVideoIndex]"
       :autoplay="false"
       :volume="volume"
       :currentTime="videoCurrentTime"
+      @volumeChange="setCurrentVolume"
       @playing="setCurrentTime" />
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'VideoAlbum',
@@ -91,10 +92,27 @@ export default {
       //  current play video index
       palyVideoIndex: false,
       // video current time
-      videoCurrentTime: 0,
+      videoCurrentTime: 100,
       // video volume
-      volume: 0.5
+      volume: 0.5,
+      // bgm status cach
+      bgmStatusCache: {
+        bgmStatus: '',
+        musicAudio: ''
+      },
+      // video play's video
+      video: ''
     }
+  },
+  watch: {
+    '$route' ({ params: { album } }) {
+      const { tryTurnToVideo } = this
+
+      tryTurnToVideo(album)
+    }
+  },
+  computed: {
+    ...mapState(['bgmStatus', 'musicAudio'])
   },
   methods: {
     /**
@@ -102,20 +120,87 @@ export default {
      * @return     {undefined}  no return
      */
     init () {
-      const { contents, album } = this
+      const { cachBgmStatus, getAlbumData, tryTurnToVideo } = this
+
+      cachBgmStatus()
+
+      getAlbumData()
+
+      tryTurnToVideo()
+    },
+    /**
+     * @description             cache bgm status
+     * @return     {undefined}  no return
+     */
+    cachBgmStatus () {
+      const { bgmStatus, musicAudio, bgmStatusCache } = this
+
+      bgmStatusCache.bgmStatus = bgmStatus
+      bgmStatusCache.musicAudio = musicAudio
+    },
+    /**
+     * @description             recover bgm status
+     * @return     {undefined}  no return
+     */
+    recoverBgmStatus () {
+      const { setMusicAudio, setBgmStatus, bgmStatusCache: { bgmStatus, musicAudio } } = this
+
+      setMusicAudio(musicAudio)
+      setBgmStatus(bgmStatus)
+    },
+    /**
+     * @description             try turn to video when come in this route
+     * @return     {undefined}  no return
+     */
+    tryTurnToVideo (album) {
+      album = album || this.album
+
+      const { contents: { length } } = this
 
       let currentVideo = album.split('-')
 
-      if (currentVideo[1]) this.palyVideoIndex = contents.findIndex(({ album: a }) => a === currentVideo[1])
+      if (!currentVideo[1]) {
+        this.palyVideoIndex = false
+
+        return
+      }
+
+      const index = parseInt(currentVideo[1]) - 1
+
+      if (index < length) this.palyVideoIndex = index
+    },
+    /**
+     * @description             cache video play's video
+     * @return     {undefined}  no return
+     */
+    cacheVideo () {
+      const { $nextTick } = this
+
+      $nextTick(e => {
+        this.video = this.$children[1].video
+      })
+    },
+    /**
+     * @description           get album data
+     * @return     {promise}  async promise
+     */
+    async getAlbumData () {
     },
     /**
      * @description             turn to video
      * @return     {undefined}  no return
      */
     turnToVideo (index) {
+      const { album, $router, setBgmStatus, setMusicAudio, video } = this
+
       this.palyVideoIndex = index
 
       this.videoCurrentTime = 0
+
+      $router.push(`/home/video/${album}-${index + 1}`)
+
+      setBgmStatus(false)
+      setMusicAudio(video)
     },
     /**
      * @description             set current video current time
@@ -124,12 +209,29 @@ export default {
     setCurrentTime (time) {
       this.videoCurrentTime = time
     },
-    ...mapMutations(['setFadeHeader'])
+    /**
+     * @description             set current volume
+     * @return     {undefined}  no return
+     */
+    setCurrentVolume (volume) {
+      this.volume = volume
+    },
+    ...mapMutations(['setFadeHeader', 'setMusicAudio', 'setBgmStatus'])
   },
   created () {
     const { init } = this
 
     init()
+  },
+  mounted () {
+    const { cacheVideo } = this
+
+    cacheVideo()
+  },
+  destroyed () {
+    const { recoverBgmStatus } = this
+
+    recoverBgmStatus()
   }
 }
 </script>
