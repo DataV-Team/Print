@@ -1,7 +1,8 @@
 <template>
   <div class="progress" :ref="pgsRef" @click="turnProgress">
+    <div class="enhance-click-area"></div>
     <div class="current-progress" :style="`width: ${progress * 100}%;`" />
-    <div class="change-progress-btn" :style="`left: ${progress * 100}%;`" @click.stop @mousedown="changeProgressStart" />
+    <div :class="`${btnClass || ''} change-progress-btn`" :style="`left: ${progress * 100}%;`" @click.stop @mousedown="changeProgressStart" />
   </div>
 </template>
 
@@ -20,7 +21,7 @@ export default {
       lastDragXPos: false
     }
   },
-  props: ['progress'],
+  props: ['progress', 'btnClass'],
   methods: {
     /**
      * @description             init
@@ -113,9 +114,16 @@ export default {
   position: relative;
   width: 100%;
   height: 3px;
-  cursor: pointer;
   transition: all 0.3s;
   .SBS(fade(@BSC, 60));
+
+  .enhance-click-area {
+    position: absolute;
+    top: -5px;
+    width: 100%;
+    height: 13px;
+    cursor: pointer;
+  }
 
   .current-progress {
     position: absolute;
