@@ -18,8 +18,12 @@ export default {
       ctx: '',
       // canvas [width, height]
       canvasWH: [],
-      // audio analyser
-      audioAnalyser: '',
+      // audio ctx
+      audioCtx: '',
+      // audio media source nodes
+      audioNodes: new Map(),
+      // current audio analyser
+      currentAudioAnalyser: '',
       // frequency data
       frequency: [],
       // last frequency data
@@ -48,6 +52,13 @@ export default {
       capHeight: 2,
       // animation status
       animationEndHandler: ''
+    }
+  },
+  watch: {
+    audio (a, v) {
+      const { changeAudio } = this
+
+      changeAudio()
     }
   },
   methods: {
@@ -88,19 +99,37 @@ export default {
      * @return     {undefined}  no return
      */
     initAudio () {
-      const { audio, analyserFFT } = this
+      const { audioNodes, createAudioMediaAnalyser } = this
 
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+      this.audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+
+      const audio = this.audio || new Audio()
+
+      const audioAnalyser = createAudioMediaAnalyser(audio)
+
+      this.frequency = new Uint8Array(audioAnalyser.frequencyBinCount)
+
+      this.currentAudioAnalyser = audioAnalyser
+
+      audioNodes.set(audio, audioAnalyser)
+    },
+    /**
+     * @description               create audio media source
+     * @param      {audio/video}  media element
+     * @return     {source}       media analyser
+     */
+    createAudioMediaAnalyser (audio) {
+      const { audioCtx, analyserFFT } = this
 
       const audioSource = audioCtx.createMediaElementSource(audio)
-      const audioAnalyser = this.audioAnalyser = audioCtx.createAnalyser()
+      const audioAnalyser = audioCtx.createAnalyser()
 
       audioSource.connect(audioAnalyser)
       audioAnalyser.connect(audioCtx.destination)
 
       audioAnalyser.fftSize = analyserFFT
 
-      this.frequency = new Uint8Array(audioAnalyser.frequencyBinCount)
+      return audioAnalyser
     },
     /**
      * @description             init column config
@@ -126,9 +155,9 @@ export default {
      * @return     {undefined}  no return
      */
     draw () {
-      const { draw, audioAnalyser, frequency, ctx, canvasWH } = this
+      const { draw, currentAudioAnalyser, frequency, ctx, canvasWH } = this
 
-      audioAnalyser.getByteFrequencyData(frequency)
+      currentAudioAnalyser.getByteFrequencyData(frequency)
 
       ctx.clearRect(0, 0, ...canvasWH)
 
@@ -185,17 +214,41 @@ export default {
       ++currentFrame === colorTransformFrame && (this.colorTransformIndex++)
 
       return [tranTopColor, tranBottomColor]
+    },
+    /**
+     * @description             change current audio
+     * @return     {undefined}  no return
+     */
+    changeAudio () {
+      const { audioNodes, createAudioMediaAnalyser, audio } = this
+
+      const audioAnalyser = audioNodes.get(audio) || createAudioMediaAnalyser(audio)
+
+      this.frequency = new Uint8Array(audioAnalyser.frequencyBinCount)
+
+      this.currentAudioAnalyser = audioAnalyser
+
+      !audioNodes.get(audio) && audioNodes.set(audio, audioAnalyser)
+    },
+    /**
+     * @description             stop canvas animation
+     * @return     {undefined}  no return
+     */
+    stopCanvasAnimation () {
+      const { animationEndHandler } = this
+
+      cancelAnimationFrame(animationEndHandler)
     }
   },
   mounted () {
-    const { init, $nextTick } = this
+    const { init } = this
 
-    $nextTick(init)
+    init()
   },
   destroyed () {
-    const { animationEndHandler } = this
+    const { stopCanvasAnimation } = this
 
-    cancelAnimationFrame(animationEndHandler)
+    stopCanvasAnimation()
   }
 }
 </script>
