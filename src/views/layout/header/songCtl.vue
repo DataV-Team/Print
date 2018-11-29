@@ -1,15 +1,15 @@
 <template>
   <div id="song-ctl">
-    <audio class="song-audio" ref="song-audio" :src="songList[currentSongIndex] && songList[currentSongIndex].src"
-      :loop="playType[playTypeIndex]['typeName'] === 'singleLoop'" :autoplay="playStatus" @ended="autoNextSong" />
+    <audio class="song-audio" ref="song-audio" :src="(songList[currentSongIndex] && songList[currentSongIndex].src) || ''"
+      :loop="playType[playTypeIndex]['typeName'] === 'singleLoop'" :autoplay="bgmStatus" @ended="autoNextSong" />
 
     <div class="control">
       <i class="jm-prev" @click="playType[playTypeIndex]['typeName'] === 'random' ? randomSong(true) : nextOrPrev(true)" />
-      <i :class="playStatus ? 'jm-pause' : 'jm-play'" @click="songList[currentSongIndex] && playOrPause()" />
-      <i class="jm-next" @click="playType[playTypeIndex]['typeName'] === 'random' ? randomSong(true) : nextOrPrev()" />
+      <i :class="bgmStatus ? 'jm-pause' : 'jm-play'" @click="songList[currentSongIndex] && setBgmStatus(!bgmStatus)" />
+      <i class="jm-next" @click="playType[playTypeIndex]['typeName'] === 'random' ? randomSong(true) : setBgmStatus(!bgmStatus)" />
     </div>
 
-    <div :class="`current-song ${!songList.length && 'disabled'}`" @click="songList[currentSongIndex] && playOrPause()" :title="songList[currentSongIndex] && songList[currentSongIndex].artist">
+    <div :class="`current-song ${!songList.length && 'disabled'}`" @click="songList[currentSongIndex] && setBgmStatus(!bgmStatus)" :title="songList[currentSongIndex] && songList[currentSongIndex].artist">
       {{ songList[currentSongIndex] ? songList[currentSongIndex].name : 'No Song' }}
     </div>
 
@@ -26,7 +26,7 @@
             v-for="(song, index) in songList"
             :key="`${song.name}-${song.artist}`"
             :title="song.artist"
-            @click="(playStatus = true) && (currentSongIndex = index)">
+            @click="setBgmStatus(true) && (currentSongIndex = index)">
             <i class="jm-music" v-if="currentSongIndex === index" />{{ song.name }}
           </div>
 
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'SongCtl',
@@ -56,8 +56,6 @@ export default {
       songAudio: '',
       // volume btn dom
       volumeBtn: '',
-      // play status
-      playStatus: true,
       // song list
       songList: [
         {
@@ -105,11 +103,16 @@ export default {
     }
   },
   watch: {
-    playStatus () {
-      const { setLocalSongConfig } = this
+    bgmStatus () {
+      const { setLocalSongConfig, playOrPause } = this
 
       setLocalSongConfig()
+
+      playOrPause()
     }
+  },
+  computed: {
+    ...mapState(['bgmStatus'])
   },
   methods: {
     /**
@@ -162,12 +165,10 @@ export default {
      * @return     {undefined}  no retrun
      */
     playOrPause () {
-      const { playStatus, songAudio } = this
+      const { bgmStatus, songAudio } = this
 
-      playStatus && songAudio.pause()
-      !playStatus && songAudio.play()
-
-      this.playStatus = !playStatus
+      bgmStatus && songAudio.play()
+      !bgmStatus && songAudio.pause()
     },
     /**
      * @description             set volume
@@ -201,10 +202,10 @@ export default {
      * @return     {undefined}  no return
      */
     initCurrentSong () {
-      const { playTypeIndex, playType, songList, randomSong } = this
+      const { playTypeIndex, playType, songList, randomSong, setBgmStatus } = this
 
       if (!songList.length) {
-        this.playStatus = false
+        setBgmStatus(false)
 
         return
       }
@@ -216,13 +217,13 @@ export default {
      * @return     {undefined}  no return
      */
     randomSong (forcePlay = false) {
-      const { currentSongIndex, songList, randomSong } = this
+      const { currentSongIndex, songList, randomSong, setBgmStatus } = this
 
       this.currentSongIndex = parseInt(Math.random() * songList.length)
 
       currentSongIndex === this.currentSongIndex && randomSong()
 
-      forcePlay && (this.playStatus = true)
+      forcePlay && setBgmStatus(true)
     },
     /**
      * @description             change song play type
@@ -240,61 +241,55 @@ export default {
      * @return     {undefined}  no return
      */
     autoNextSong () {
-      const { songList, playType, playTypeIndex, randomSong, nextOrPrev } = this
-
-      this.playStatus = false
-
-      if (!songList.length) return
+      const { playType, playTypeIndex, randomSong, nextOrPrev } = this
 
       const currentPlayType = playType[playTypeIndex]['typeName']
 
       currentPlayType === 'random' && randomSong()
 
       currentPlayType === 'loop' && nextOrPrev()
-
-      this.playStatus = true
     },
     /**
      * @description             next or prev song
      * @return     {undefined}  no return
      */
     nextOrPrev (prev = false) {
-      const { currentSongIndex, songList } = this
-
-      this.playStatus = false
+      const { currentSongIndex, songList, bgmStatus, setBgmStatus } = this
 
       if (!songList.length) return
 
       prev && ((currentSongIndex - 1) < 0 ? this.currentSongIndex = songList.length - 1 : this.currentSongIndex--)
       !prev && ((currentSongIndex + 1) === songList.length ? this.currentSongIndex = 0 : this.currentSongIndex++)
 
-      this.playStatus = true
+      !bgmStatus && setBgmStatus(true)
     },
     /**
      * @description             get local song config, volume play status
      * @return     {undefined}  no return
      */
     getLocalSongConfig () {
+      const { setBgmStatus } = this
+
       const volume = localStorage.getItem('volume')
       const playTypeIndex = localStorage.getItem('playTypeIndex')
-      const playStatus = localStorage.getItem('playStatus')
+      const bgmStatus = localStorage.getItem('bgmStatus')
 
       volume && (this.volume = parseFloat(volume))
       playTypeIndex && (this.playTypeIndex = parseInt(playTypeIndex))
-      playStatus === 'false' && (this.playStatus = false)
+      bgmStatus === 'false' && setBgmStatus(false)
     },
     /**
      * @description             set local song config, volume play status
      * @return     {undefined}  no return
      */
     setLocalSongConfig () {
-      const { volume, playTypeIndex, playStatus } = this
+      const { volume, playTypeIndex, bgmStatus } = this
 
       localStorage.setItem('volume', volume)
       localStorage.setItem('playTypeIndex', playTypeIndex)
-      localStorage.setItem('playStatus', playStatus)
+      localStorage.setItem('bgmStatus', bgmStatus)
     },
-    ...mapMutations(['setMusicAudio'])
+    ...mapMutations(['setMusicAudio', 'setBgmStatus'])
   },
   mounted () {
     const { init } = this
