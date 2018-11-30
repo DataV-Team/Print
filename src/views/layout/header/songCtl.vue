@@ -14,11 +14,11 @@
     </div>
 
     <div class="action-container">
-      <div class="volume">
-        <div class="progress" ref="volume-progress">
-          <span :class="`jm-${volume < 0.05 ? 'mute' : (volume < 0.3 ? 'volume-low' : (volume > 0.7 ? 'volume-hight' : 'volume-middle'))}`" ref="volume-btn" :style="`left: calc(${volume * 100}% - 15px)`" />
-        </div>
-      </div>
+
+      <progresser
+        :progress="volume"
+        :btnClass="`jm-${volume < 0.05 ? 'mute' : (volume < 0.3 ? 'volume-low' : (volume > 0.7 ? 'volume-hight' : 'volume-middle'))}`"
+        @change="setVolume" />
 
       <div class="song-list">
         <template v-if="songList.length">
@@ -54,8 +54,6 @@ export default {
     return {
       // song audio dom
       songAudio: '',
-      // volume btn dom
-      volumeBtn: '',
       // song list
       songList: [
         {
@@ -97,9 +95,7 @@ export default {
       //  current play type index
       playTypeIndex: 0,
       // song volume
-      volume: 0.3,
-      // volume progress width
-      volumeProgressWidth: ''
+      volume: 0.3
     }
   },
   watch: {
@@ -120,13 +116,11 @@ export default {
      * @return     {undefined}  no return
      */
     init () {
-      const { getLocalSongConfig, initDom, initVolumeSetExtend, initCurrentSong } = this
+      const { getLocalSongConfig, initDom, initCurrentSong } = this
 
       getLocalSongConfig()
 
       initDom()
-
-      initVolumeSetExtend()
 
       initCurrentSong()
     },
@@ -139,26 +133,9 @@ export default {
 
       this.songAudio = $refs['song-audio']
 
-      this.volumeBtn = $refs['volume-btn']
-
-      this.volumeProgressWidth = $refs['volume-progress'].clientWidth
-
       this.songAudio.volume = volume
 
       setMusicAudio(this.songAudio)
-    },
-    /**
-     * @description             init volume set extend
-     * @return     {undefined}  no return
-     */
-    initVolumeSetExtend () {
-      const { volumeBtn, setVolume, endSetVolume } = this
-
-      volumeBtn.addEventListener('mousedown', e => {
-        document.addEventListener('mousemove', setVolume)
-
-        document.addEventListener('mouseup', endSetVolume)
-      })
     },
     /**
      * @description             play or pause song
@@ -174,28 +151,12 @@ export default {
      * @description             set volume
      * @return     {undefined}  no retrun
      */
-    setVolume ({ movementX }) {
-      const { volumeProgressWidth, volume, songAudio } = this
+    setVolume (volume) {
+      const { songAudio } = this
 
-      const percent = movementX / volumeProgressWidth
-
-      const currentVolume = volume + percent
-
-      currentVolume > 0 && currentVolume < 1 && (this.volume += percent)
+      this.volume = volume
 
       songAudio.volume = this.volume
-    },
-    /**
-     * @description             end set volume
-     * @return     {undefined}  no return
-     */
-    endSetVolume () {
-      const { setVolume, endSetVolume, setLocalSongConfig } = this
-
-      document.removeEventListener('mousemove', setVolume)
-      document.removeEventListener('mouseup', endSetVolume)
-
-      setLocalSongConfig()
     },
     /**
      * @description             init current song
@@ -385,29 +346,18 @@ export default {
   .action-container {
     position: relative;
     visibility: hidden;
-    .volume {
-      height: 30px;
-      display: flex;
-      align-items: center;
 
-      .progress {
-        flex: 1;
-        height: 4px;
-        border-radius: 2px;
-        background-color: fade(@TC, 60);
-        position: relative;
-        .SBS(@TC);
+    .progress {
+      margin-top: 15px;
+      margin-bottom: 15px;
 
-        span {
-          position: absolute;
-          display: block;
-          width: 15px;
-          height: 15px;
-          top: -6px;
-          text-align: center;
-          cursor: pointer;
-          .STS(@TC);
-        }
+      .change-progress-btn {
+        color: @STC;
+        background-color: transparent;
+        border-color: transparent;
+        font-size: @VPVBIFS;
+        line-height: 11px;
+        .STS(@TC);
       }
     }
 
