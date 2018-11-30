@@ -4,21 +4,23 @@
 
       <video :ref="videoRef"
         preload="auto"
-        @click="playOrPause"
+        @click="status = !status"
         @waiting="waitingHandle"
         @canplay="canPlayHandle"
-        @ended="status = false"
+        @ended="(status = false) & (ended = true)"
         :autoplay="autoplay"
         :src="resource && resource.videoSrc"
         :poster="resource && resource.coverSrc">
       </video>
 
+      <div class="replay-btn" v-if="ended && !status" @click="replayVideo"><i class="jm-replay" />Replay</div>
+
       <loading v-if="loading" />
 
       <div class="video-controls">
-        <progresser class="video-progress" :progress="currentTime / durationTime" @change="setVideoProgress" />
+        <progresser class="video-progress" :progress="videoProgress" @change="setVideoCurrentTime" />
 
-        <i :class="`jm-video-${status ? 'pause' : 'play'}`" @click="playOrPause" />
+        <i :class="`jm-video-${status ? 'pause' : 'play'}`" @click="status = !status" />
 
         <div class="current-time">{{ (currentTime || 0) | secondsToMinutes }}</div>
 
@@ -30,7 +32,7 @@
 
         <div class="duration-time">{{ durationTime | secondsToMinutes }}</div>
 
-        <i class="jm-full-screen" />
+        <i class="jm-full-screen" @click="fullScreen" />
       </div>
     </div>
   </div>
@@ -52,15 +54,34 @@ export default {
       status: false,
       // loading
       loading: false,
+      // ended status
+      ended: false,
       // time out handle
       timeOutHandle: ''
     }
   },
   watch: {
+    status () {
+      const { playOrPause } = this
+
+      playOrPause()
+    },
     volume (v) {
       const { video } = this
 
       video.volume = v
+    },
+    resource (v) {
+      !v && (this.status = false)
+    }
+  },
+  computed: {
+    videoProgress () {
+      const { currentTime, durationTime } = this
+
+      if (!durationTime) return 0
+
+      return currentTime / durationTime
     }
   },
   methods: {
@@ -69,21 +90,72 @@ export default {
      * @return     {undefined}  no return
      */
     init () {
-      const { $refs, videoRef, getCurrentTime, volume, currentTime } = this
+      const { initConfig, getCurrentTime, addSpaceEnhance } = this
+
+      initConfig()
+
+      getCurrentTime()
+
+      addSpaceEnhance()
+    },
+    /**
+     * @description             init component config
+     * @return     {undefined}  no return
+     */
+    initConfig () {
+      const { $refs, videoRef, volume, currentTime } = this
 
       this.video = $refs[videoRef]
 
       this.video.volume = volume || '0.5'
 
       this.video.currentTime = currentTime
-
-      getCurrentTime()
     },
     /**
-     * @description             set video progress
+     * @description             get current time of video
      * @return     {undefined}  no return
      */
-    setVideoProgress (p) {
+    getCurrentTime () {
+      const { status, video, getCurrentTime, emitPlayingEvent } = this
+
+      status && emitPlayingEvent(video.currentTime)
+
+      this.timeOutHandle = setTimeout(getCurrentTime, 1000)
+    },
+    /**
+     * @description             add space key up play video enhance
+     * @return     {undefined}  no return
+     */
+    addSpaceEnhance () {
+      const { spacePlayOrPause } = this
+
+      document.addEventListener('keyup', spacePlayOrPause)
+    },
+    /**
+     * @description             remove space enhance
+     * @return     {undefined}  no return
+     */
+    removeSpaceEnhance () {
+      const { spacePlayOrPause } = this
+
+      document.removeEventListener('keyup', spacePlayOrPause)
+    },
+    /**
+     * @description             play or pause by space key up
+     * @return     {undefined}  no return
+     */
+    spacePlayOrPause ({ keyCode }) {
+      const { status, resource } = this
+
+      if (keyCode !== 32) return
+
+      resource && (this.status = !status)
+    },
+    /**
+     * @description             set video setVideoCurrentTime
+     * @return     {undefined}  no return
+     */
+    setVideoCurrentTime (p) {
       const { video, durationTime, emitPlayingEvent } = this
 
       const currentTime = durationTime * p
@@ -97,10 +169,10 @@ export default {
     playOrPause () {
       const { status, video } = this
 
-      this.status = !status
+      status && (this.ended = false)
 
-      this.status && video.play()
-      !this.status && video.pause()
+      status && video.play()
+      !status && video.pause()
     },
     /**
      * @description             video waiting handle
@@ -118,15 +190,34 @@ export default {
       this.loading = false
     },
     /**
-     * @description             get current time of video
+     * @description             full screen
      * @return     {undefined}  no return
      */
-    getCurrentTime () {
-      const { status, video, getCurrentTime, emitPlayingEvent } = this
+    fullScreen () {
+      const { video } = this
 
-      status && emitPlayingEvent(video.currentTime)
+      if (video.requestFullscreen) {
+        video.requestFullscreen()
+      } else if (video.mozRequestFullScreen) {
+        video.mozRequestFullScreen()
+      } else if (video.webkitRequestFullscreen) {
+        video.webkitRequestFullscreen()
+      } else if (video.msRequestFullscreen) {
+        video.msRequestFullscreen()
+      }
+    },
+    /**
+     * @description             replay video
+     * @return     {undefined}  no return
+     */
+    replayVideo () {
+      const { video, emitPlayingEvent } = this
 
-      this.timeOutHandle = setTimeout(getCurrentTime, 1000)
+      video.currentTime = 0
+
+      emitPlayingEvent(0)
+
+      this.status = true
     },
     /**
      * @description             emit playing event
@@ -149,9 +240,11 @@ export default {
     init()
   },
   destroyed () {
-    const { timeOutHandle } = this
+    const { timeOutHandle, removeSpaceEnhance } = this
 
     clearTimeout(timeOutHandle)
+
+    removeSpaceEnhance()
   }
 }
 </script>
@@ -160,9 +253,7 @@ export default {
 @import url('../assets/style/index.less');
 
 .video-player {
-  position: absolute;
-  top: 0px;
-  left: 0px;
+  position: relative;
   width: 100%;
   height: 100%;
 
@@ -174,6 +265,12 @@ export default {
     height: 562px;
     transform: translate(-50%, -50%);
     margin-top: -50px;
+
+    &:hover {
+      .video-controls {
+        visibility: visible;
+      }
+    }
   }
 
   video {
@@ -182,11 +279,34 @@ export default {
     cursor: pointer;
   }
 
+  .replay-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 80px;
+    color: @TC;
+    font-size: @VPRBFS;
+    line-height: 70px;
+    text-align: center;
+    border-radius: 30px;
+    cursor: pointer;
+    .STS(@TC);
+    .SBS(fade(@BSC, 60));
+
+    .jm-replay {
+      font-size: @VPRBIFS;
+      margin-right: 20px;
+    }
+  }
+
   .video-controls {
     position: absolute;
     height: 30px;
     width: 100%;
     bottom: -30px;
+    visibility: hidden;
     .SBS(fade(@BSC, 60));
   }
 
