@@ -105,6 +105,11 @@ export default {
       setLocalSongConfig()
 
       playOrPause()
+    },
+    volume () {
+      const { setLocalSongConfig } = this
+
+      setLocalSongConfig()
     }
   },
   computed: {
