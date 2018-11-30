@@ -6,11 +6,11 @@
       <div class="zoom-img-container">
         <img :src="albums[zoomIndex].src">
         <i :class="`jm-${autoPlayStatus ? 'pause' : 'play'}`" @click="doAutoPlay" />
-      </div>
 
-      <i class="jm-left" @click="zoomIndex - 1 < 0 ? zoomIndex = albums.length - 1 : zoomIndex--" />
-      <i class="jm-right" @click="zoomIndex + 1 === albums.length ? zoomIndex = 0 : zoomIndex++" />
-      <i class="jm-fork" @click="zoomIndex = autoPlayStatus = false" />
+        <i class="jm-left" @click="zoomIndex - 1 < 0 ? zoomIndex = albums.length - 1 : zoomIndex--" />
+        <i class="jm-right" @click="zoomIndex + 1 === albums.length ? zoomIndex = 0 : zoomIndex++" />
+        <i class="jm-fork" @click="zoomIndex = autoPlayStatus = false" />
+      </div>
     </div>
   </div>
 </template>
@@ -148,13 +148,6 @@ export default {
       justify-content: space-around;
       border-radius: 15px;
 
-      &:hover {
-        .jm-play, .jm-pause {
-          visibility: visible;
-          opacity: 1;
-        }
-      }
-
       img {
         height: 100%;
         width: auto;
@@ -162,13 +155,20 @@ export default {
         padding: 10px;
         border-radius: 15px;
         .SBS(fade(@BSC, 60));
+
+        &:hover {
+          + .jm-play, + .jm-pause {
+            visibility: visible;
+            opacity: 1;
+          }
+        }
       }
     }
 
     .jm-left, .jm-right, .jm-fork, .jm-play, .jm-pause {
       position: absolute;
       cursor: pointer;
-      color: transparent;
+      color: @TC;
       .STS(@TC);
 
       &:active {
@@ -183,16 +183,16 @@ export default {
     }
 
     .jm-left {
-      left: 20px;
+      left: -120px;
     }
 
     .jm-right {
-      right: 20px;
+      right: -120px;
     }
 
     .jm-fork {
       top: 100px;
-      right: 40px;
+      right: -100px;
       font-size: 60px;
     }
 
@@ -205,6 +205,11 @@ export default {
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s;
+
+      &:hover {
+        opacity: 1;
+        visibility: visible;
+      }
     }
   }
 }
