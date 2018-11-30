@@ -26,7 +26,7 @@
             v-for="(song, index) in songList"
             :key="`${song.name}-${song.artist}`"
             :title="song.artist"
-            @click="setBgmStatus(true) && (currentSongIndex = index)">
+            @click="setBgmStatus(true) & (currentSongIndex = index)">
             <i class="jm-music" v-if="currentSongIndex === index" />{{ song.name }}
           </div>
 
