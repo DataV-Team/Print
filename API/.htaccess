@@ -1,4 +1,0 @@
-# RewriteEngine On
-
-#Redirect Request
-# RewriteRule ^([a-zA-Z0-9/]*)$ index.php/$1
