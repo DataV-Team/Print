@@ -1,0 +1,49 @@
+{
+  "name": "@jiaminghi/print",
+  "version": "0.0.1",
+  "author": "JiaMing <743192023@qq.com>",
+  "description": "Colorful console print for node.js",
+  "main": "lib/index.js",
+  "types": "types/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jiaming743/print.git"
+  },
+  "scripts": {
+    "clean": "rimraf lib types",
+    "type:check": "tsc --noEmit",
+    "lint": "eslint --ext js,ts src",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "check": "npm run type:check && npm run lint && npm run format:check",
+    "build": "tsc",
+    "prepare": "npm run clean && npm run check && npm run build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run check",
+      "pre-push": "npm run check"
+    }
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jiaming743/print/issues"
+  },
+  "keywords": [
+    "colorful",
+    "node",
+    "console"
+  ],
+  "dependencies": {},
+  "homepage": "https://github.com/jiaming743/print#readme",
+  "devDependencies": {
+    "@types/node": "^13.13.4",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
+    "eslint": "^6.8.0",
+    "husky": "^4.2.5",
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.8.3"
+  }
+}
