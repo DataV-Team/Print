@@ -19,9 +19,15 @@
 
 - **print.error**
 
+- **print.success**
+
 - **print.tip**
 
-- **print.success**
+- **print.red**
+
+- **print.green**
+
+- **print.white**
 
 - **print.yellow**
 
