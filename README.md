@@ -31,6 +31,8 @@
 
 - **print.yellow**
 
+- **print.clear**
+
 ### npm 安装
 
 ```shell
