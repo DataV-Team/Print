@@ -1,6 +1,6 @@
 {
   "name": "@jiaminghi/print",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "JiaMing <743192023@qq.com>",
   "description": "Colorful console print for node.js",
   "main": "lib/index.js",
